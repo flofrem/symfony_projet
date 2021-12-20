@@ -1,0 +1,14 @@
+{% extends "front/base.html.twig" %}
+
+{% block main %}
+
+	{% for product in products %}
+		<h2>{{product.name}}</h2>
+	    <p>{{product.price}}</p>
+        <p>{{product.stock}}</p>
+        <h3>{{product.licence.name}}</h3>
+        <h3>{{product.category.name}}</h3>
+
+	{% endfor %}
+	
+{% endblock %}

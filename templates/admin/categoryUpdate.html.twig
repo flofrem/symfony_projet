@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admind categories</title>
+</head>
+<body>
+    {{ form_start(categoryForm)}}
+
+    {{form_label(categoryForm.name,'nom  :', {'label.attr': {'class':'label'}})}}
+    {{form_widget(categoryForm.name, { 'att' : {'placeholder' : 'nom ', 'class':'name'}})}}
+
+    {{form_label(categoryForm.description,'description   :', {'label.attr': {'class':'label'}})}}
+    {{form_widget(categoryForm.description, { 'att' : {'placeholder' : 'description  '}})}}
+
+    {{form_label(categoryForm.media,'media   :', {'label.attr': {'class':'label'}})}}
+    {{form_widget(categoryForm.media, { 'att' : {'placeholder' : 'media  '}})}}
+
+   
+    {{form_widget(categoryForm.submit, { 'att' : {'label' : 'Enregistrer'}})}}
+
+    {{ form_end(categoryForm) }}
+
+</body>
+</html>

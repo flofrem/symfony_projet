@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin licence</title>
+</head>
+<body>
+    {{ form_start(licenceForm)}}
+
+    {{form_label(licenceForm.name,'nom de la licence :', {'label.attr': {'class':'label'}})}}
+    {{form_widget(licenceForm.name, { 'att' : {'placeholder' : 'nom de la licence ', 'class':'name'}})}}
+
+    {{form_label(licenceForm.description,'description de la licence  :', {'label.attr': {'class':'label'}})}}
+    {{form_widget(licenceForm.description, { 'att' : {'placeholder' : 'description de la licence '}})}}
+
+    {{form_label(licenceForm.media,'media   :', {'label.attr': {'class':'label'}})}}
+    {{form_widget(licenceForm.media, { 'att' : {'placeholder' : 'media  '}})}}
+   
+    {{form_widget(licenceForm.submit, { 'att' : {'label' : 'Enregistrer'}})}}
+
+    {{ form_end(licenceForm) }}
+
+</body>
+</html>

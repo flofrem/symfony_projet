@@ -1,0 +1,12 @@
+{% extends "front/base.html.twig" %}
+
+{% block main %}
+
+	{% for category in categorys %}
+		<h2>{{category.name}}</h2>
+	    <p>{{category.description}}</p>
+        <p>{{category.media}}</p>
+
+	{% endfor %}
+	
+{% endblock %}
