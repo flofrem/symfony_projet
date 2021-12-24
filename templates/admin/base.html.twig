@@ -4,15 +4,71 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Florent Frémont 2021">
+     <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <title>symfonyProjet cote obscure</title>
 </head>
 <body>
-<header>bienvenue sur l'admin du site  
-</header>
+<header><p>BIENVENUE SUR L'ADMIN DU SITE</p>
+<header >
+    <div class="header">
+        <div class="w20">
+            <a href="{{ path('front_home') }}">
+                Accueil{# <img class="w35" src="{{ asset('') }}"> #}
+            </a>
+        </div>
+        <div class="search">
+                        <div class="categories">
+                <a href="{{ path('admin_list_category') }}">Catégories</a>
+            </div>
+            <div class="licences">
+                <a href="{{  path('admin_list_licence') }}">Licences</a>
+            </div>
+        </div>
+        <div class="w40">
+            <div class="basket">
+                <a href="{{ path('admin_list_product') }}">Produits</a>
+            </div>
+            <div class="log">
+                <a href="{{ path('app_login') }}">{% if app.user %}
+                        {{ app.user.firstname }} {{ app.user.name  }}
+                    {% endif %}
+                    {% if app.user is null %}
+                        Se connecter/S'inscrire
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+    </div>
+
 <main>
     {% block main %}
     {% endblock %}
     </main>
-    <footer>au revoir</footer>
+    <footer><p>AU REVOIR </p>
+    <footer >
+    <div class="footer">
+        <div class="admin-infos">
+            <ul>
+                
+               
+            </ul>
+        </div>
+        <div class="up">
+            <a href="#top">Retour en haut</a>
+        </div>
+        <div class="admin-infos">
+            <ul>
+                <li><a href="{{ path('admin_list_product') }}">Produits</a></li>
+                <li><a href="{{  path('admin_list_licence') }}">Licences</a></li>
+                <li><a href="{{ path('admin_list_category') }}">Catégories</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+    </footer>
 </body>
 </html>

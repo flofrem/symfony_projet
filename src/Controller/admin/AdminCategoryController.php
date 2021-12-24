@@ -1,94 +1,134 @@
 <?php
+
 namespace App\Controller\admin;
 
-use App\Entity\Like;
 use App\Entity\Category;
 use App\Form\CategoryType;
-use App\Repository\LikeRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class AdminCategoryController extends AbstractController {
-
-     /**
-     * @Route("/admin/categorys/", name="admin_list_category")
+class AdminCategoryController extends AbstractController
+{
+    /**
+     * @Route("/admin/categories/", name="admin_list_category")
      */
     public function listCategory(CategoryRepository $categoryRepository)
     {
-        $categorys = $categoryRepository->findAll();
+        $categories = $categoryRepository->findAll();
 
-        return $this->render("admin/categorys.html.twig", ['categorys' => $categorys]);
+        return $this->render("admin/categories.html.twig", ['categories' => $categories]);
     }
 
     /**
      * @Route("admin/category/{id}", name="admin_show_category")
      */
-    public function showCategory(CategoryRepository $categoryRepository, $id)
+    public function showCategory($id, CategoryRepository $categoryRepository)
     {
         $category = $categoryRepository->find($id);
 
         return $this->render("admin/category.html.twig", ['category' => $category]);
     }
-     /**
-     * @Route("admin/update/category/{id}", name="category_update")
+
+    /**
+     * @Route("admin/update/category/{id}", name="admin_update_category")
      */
-    public function categoryUpdate($id,CategoryRepository $categoryRepository, EntityManagerInterface $entityManagerInterface, Request $request
+    public function updateCategory(
+        $id,
+        CategoryRepository $categoryRepository,
+        EntityManagerInterface $entityManagerInterface,
+        Request $request,
+        SluggerInterface $sluggerInterface
+    ) {
+        $category = $categoryRepository->find($id);
 
-    )
-   {
-       $category = $categoryRepository->find($id);
-       $categoryForm = $this->createForm(categoryType::class, $category);
+        $categoryForm = $this->createForm(CategoryType::class, $category);
 
-       $categoryForm->handleRequest($request);
-       if ( $categoryForm->isSubmitted() && $categoryForm->isValid()) {
-           $entityManagerInterface->persist($category);
-           $entityManagerInterface->flush();
-       }
-       return $this -> render ('admin/categoryUpdate.html.twig', ['categoryForm'=> $categoryForm->createView(),]);
-   }
-   /**
-    * @Route("admin/add/category", name="category_add")
-    */
-   public function addUpdate( EntityManagerInterface $entityManagerInterface, Request $request
+        $categoryForm->handleRequest($request);
 
-    )
-   {
-      
-       $category = new Category();
-       $categoryForm = $this->createForm(CategoryType::class, $category);
+        if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
 
-       $categoryForm->handleRequest($request);
-       if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
-          
-           $entityManagerInterface->persist($category);
-           $entityManagerInterface->flush();
+            $mediaFile = $categoryForm->get('media')->getData();
 
-           return $this->redirectToRoute("admin_list_category");
-       }
-       return $this -> render ('admin/categoryUpdate.html.twig', ['categoryForm'=> $categoryForm->createView(),]);
-   
-   }
-   /**
-    * @Route("admin/delete/category/{id}", name="category_delete")
-    */
-    public function deleteMedia( $id, CategoryRepository $categoryRepository, EntityManagerInterface $entityManagerInterface
+            if ($mediaFile) {
+                $originalFilename = pathinfo($mediaFile->getClientOriginalName(), PATHINFO_FILENAME);
 
-    )
-   {
-       $category = $categoryRepository->find($id);
-       $entityManagerInterface->remove($category);
-       $entityManagerInterface->flush();
-       $this->addFlash(
-           'notice',
-           'cette categorie a été supprimée'
-       );
+                $safeFilename = $sluggerInterface->slug($originalFilename);
 
-       return $this-> redirectToRoute('admin_list_category');
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $mediaFile->guessExtension();
 
-   }
-  
+                $mediaFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+
+                $category->setMedia($newFilename);
+            }
+
+            $entityManagerInterface->persist($category);
+            $entityManagerInterface->flush();
+
+            return $this->redirectToRoute("admin_list_category");
+        }
+
+        return $this->render("admin/categoryform.html.twig", ['categoryForm' => $categoryForm->createView()]);
+    }
+
+    /**
+     * @Route("admin/create/category/", name="admin_create_category")
+     */
+    public function createCategory(
+        EntityManagerInterface $entityManagerInterface,
+        Request $request,
+        SluggerInterface $sluggerInterface
+    ) {
+        $category = new Category();
+
+        $categoryForm = $this->createForm(CategoryType::class, $category);
+
+        $categoryForm->handleRequest($request);
+
+        if ($categoryForm->isSubmitted() && $categoryForm->isValid()) {
+
+            $mediaFile = $categoryForm->get('media')->getData();
+
+            if ($mediaFile) {
+                $originalFilename = pathinfo($mediaFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $safeFilename = $sluggerInterface->slug($originalFilename);
+
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $mediaFile->guessExtension();
+
+                $mediaFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+
+                $category->setMedia($newFilename);
+            }
+
+            $entityManagerInterface->persist($category);
+            $entityManagerInterface->flush();
+
+            return $this->redirectToRoute("admin_list_category");
+        }
+
+        return $this->render("admin/categoryform.html.twig", ['categoryForm' => $categoryForm->createView()]);
+    }
+
+    /**
+     * @Route("/admin/delete/{id}", name="admin_delete_category")
+     */
+    public function deleteCategory($id, EntityManagerInterface $entityManagerInterface, CategoryRepository $categoryRepository)
+    {
+        $category = $categoryRepository->find($id);
+
+        $entityManagerInterface->remove($category);
+        $entityManagerInterface->flush();
+
+        return $this->redirectToRoute("admin_list_category");
+    }
 }
-

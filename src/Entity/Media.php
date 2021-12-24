@@ -35,15 +35,12 @@ class Media
     private $title;
 
     /**
-     * @ORM\OneToMany(targetEntity=Product::class, mappedBy="media")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity=Product::class, inversedBy="media")
      */
-    private $products;
+    private $product;
 
-    public function __construct()
-    {
-        $this->products = new ArrayCollection();
-    }
+  
+
 
     public function getId(): ?int
     {
@@ -94,25 +91,17 @@ class Media
         return $this->products;
     }
 
-    public function addProduct(Product $product): self
+    public function getProduct(): ?Product
     {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setMedia($this);
-        }
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }
 
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getMedia() === $this) {
-                $product->setMedia(null);
-            }
-        }
-
-        return $this;
-    }
+    
 }

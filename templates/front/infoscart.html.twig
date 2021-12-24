@@ -1,0 +1,33 @@
+{% extends 'front/base.html.twig' %}
+
+{% block main %}
+    <div class="container">
+       
+
+        <form action="{{ path('command_create') }}" method="post">
+            <div class="margin-top">
+                <label for="name">Votre nom</label>
+                <input type="text" id="name" name="name" class="input" {% if app.user %} value="{{ app.user.name }} {{ app.user.firstname }}" {% endif %}>
+            </div>
+            <div class="margin-top">
+                <label for="email">Votre email</label>
+                <input type="text" id="email" name="email" class="input" {% if app.user %} value="{{ app.user.email}}"{% endif %}>
+            </div>
+            <div class="margin-top">
+                <label for="adress">Votre adresse</label>
+                <input type="text" id="adress" name="adress" class="input" {% if app.user %} value="{{ app.user.adress}}"{% endif %}>
+            </div>
+            <div class="margin-top">
+                <label for="city">Votre ville</label>
+                <input type="text" id="city" name="city" class="input" {% if app.user %} value="{{ app.user.city}}"{% endif %}>
+            </div>
+            <div class="margin-top">
+                <label for="zipcode">Votre code postal</label>
+                <input type="text" id="zipcode" name="zipcode" class="input" {% if app.user %} value="{{ app.user.zipcode}}"{% endif %}>
+            </div>
+            <div class="margin-top">
+                <input type="submit" value="Confirmer" class="button-product">
+            </div>
+        </form>
+    </div>
+{% endblock %}

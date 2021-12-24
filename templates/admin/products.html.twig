@@ -3,14 +3,14 @@
 
 {% block main %}
 
-
-
-	{% for product in products %}
+{% for product in products %}
 		<h2>{{product.name}}</h2>
-		<h2>{{product.price}}</h2>
-		<h3>{{product.stock}}</h3>
-		<h3>{{product.licence.name}}</h3>
+	    <p>{{product.price}}</p>
+      
+        <h3>{{product.licence.name}}</h3>
         <h3>{{product.category.name}}</h3>
+    <img src="{{ product.media[0].src }}" alt="">
+
 	{% endfor %}
 
 
